@@ -12,7 +12,7 @@ class Promotion(models.Model):
 
 class Collection(models.Model):
     title = models.CharField(max_length=255)
-    feature_product = models.ForeignKey(
+    featured_product = models.ForeignKey(
         'Product',on_delete=models.SET_NULL,null=True,related_name='+'
     )
 
@@ -22,7 +22,7 @@ class Product(models.Model):
     description = models.TextField()
     unit_price = models.DecimalField(max_digits=6,decimal_places=2)
     inventory = models.IntegerField()
-    last_updeate = models.DateTimeField(auto_now_add=True)
+    last_update = models.DateTimeField(auto_now_add=True)
     collection=models.ForeignKey('Collection', on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
 
@@ -38,7 +38,7 @@ class Customer(models.Model):
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255,null=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
