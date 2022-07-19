@@ -10,10 +10,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL("""
+            INSERT INTO store_collection (title)
+            VALUES ( 'collection1')
+            ""","""
+            DELETE FROM store_collection
+            WHERE title='collection1'
+            """),
         migrations.AddField(
             model_name='customer',
             name='last_name',
             field=models.CharField(default='', max_length=255),
             preserve_default=False,
         ),
+
     ]
