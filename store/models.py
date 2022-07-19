@@ -42,15 +42,9 @@ class Customer(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
-
     membership = models.CharField(max_length=1,choices=MEMBERSHIP_CHOICES,default=MEMBERSHIP_BRONZE)
 
-    class Meta:
-        db_table = 'store_customers'
-        #index for speeding up querys
-        indexes = [
-            models.Index(fields = ['last_name','first_name'])
-        ]
+
 
 class Order(models.Model):
     PAYMENT_STATUS_PENDING = 'P'
