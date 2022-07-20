@@ -1,9 +1,10 @@
 import imp
 from multiprocessing.sharedctypes import Value
+from unicodedata import name
 from django.forms import DecimalField
 from django.http import HttpResponse
 from django.shortcuts import render
-from store.models import Customer, Product, OrderItem, Order
+from store.models import Collection, Customer, Product, OrderItem, Order
 from django.db.models import Q,F,Value,Func, ExpressionWrapper
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Max,Min,Avg
@@ -16,7 +17,10 @@ from tags.models import TaggedItem
 
 
 def say_hello(request):
+    collection = Collection()
+    collection.title = 'Video Games'
+    collection.featured_product = Product(pk=1) 
+    collection.save()
 
-    qs = TaggedItem.objects.get_tags_for(Product,1)
 
     return render(request,'hello.html',{'name':'Changhao','tags': list(qs)})
