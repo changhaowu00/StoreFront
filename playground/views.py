@@ -5,5 +5,5 @@ from store.models import Product, OrderItem
 from django.db.models import Q,F
 
 def say_hello(request):
-    qs= Product.objects.filter(id__in=OrderItem.objects.distinct().values('product__id'))
+    qs= Product.objects.only('id','title')
     return render(request,'hello.html',{'name':'Changhao','products':list(qs)})
