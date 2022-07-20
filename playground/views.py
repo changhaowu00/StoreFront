@@ -8,11 +8,18 @@ from django.db.models import Q,F,Value,Func, ExpressionWrapper
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Max,Min,Avg
 
+from django.contrib.contenttypes.models import ContentType
+from store.models import Product
+from tags.models import TaggedItem
+
 def say_hello(request):
-    discounter_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
-    queryset = Customer.objects.annotate(
-        discounted_price  = discounter_price
-    )
+    #getting tag of a product
+    content_type = ContentType.objects.get_for_models(Product)
+    qs = TaggedItem.objects\
+        .select_related('tag')\
+        .filter(
+            content_type = content_type,
+            object_id = 1
+        )
 
-
-    return render(request,'hello.html',{'name':'Changhao'})
+    return render(request,'hello.html',{'name':'Changhao','tags': list(qs)})
