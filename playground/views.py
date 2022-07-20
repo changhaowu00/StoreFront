@@ -3,5 +3,5 @@ from django.shortcuts import render
 from store.models import Product
 
 def say_hello(request):
-    query_set = Product.objects.filter(collection__id__range=(1,2,3))
+    query_set = Product.objects.filter(title__icontains='coffee')
     return render(request,'hello.html',{'name':'Changhao','products':list(query_set)})
