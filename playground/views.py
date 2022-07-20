@@ -1,11 +1,9 @@
 import imp
 from django.http import HttpResponse
 from django.shortcuts import render
-from store.models import Product
+from store.models import Product, OrderItem
 from django.db.models import Q,F
 
 def say_hello(request):
-    product = Product.objects.all().values('id','title','collection__title')#returns dictionaries
-    product = Product.objects.all().values('id','title','collection__title')# returns list of tuples
-
-    return render(request,'hello.html',{'name':'Changhao','products':product})
+    qs= Product.objects.filter(id__in=OrderItem.objects.distinct().values('product__id'))
+    return render(request,'hello.html',{'name':'Changhao','products':list(qs)})
