@@ -5,5 +5,5 @@ from store.models import Product, OrderItem
 from django.db.models import Q,F
 
 def say_hello(request):
-    qs= Product.objects.defer('id','title')
+    qs= Product.objects.select_related('collection').all()
     return render(request,'hello.html',{'name':'Changhao','products':list(qs)})
