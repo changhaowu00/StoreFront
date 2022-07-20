@@ -5,8 +5,6 @@ from store.models import Product
 from django.db.models import Q,F
 
 def say_hello(request):
-    product = Product.objects.order_by('unit_price')[0]
-    product = Product.objects.lastest('unitprice')
-    product = Product.objects.earliest('unitprice')
+    product = Product.objects.all()[:5]
 
     return render(request,'hello.html',{'name':'Changhao','products':product})
