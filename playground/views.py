@@ -10,17 +10,7 @@ from django.db.models.aggregates import Count, Max,Min,Avg
 def say_hello(request):
 
     queryset = Customer.objects.annotate(
-        #CONCAT
-        fullname = Func(
-            F('first_name'),Value(' '),F('last_name'),function='CONCAT'
-        )
-    )
-
-    queryset = Customer.objects.annotate(
-        #CONCAT
-        fullname = Concat(
-            'first_name',Value(' '),'last_name'
-        )
+        orders_count = Count('order')
     )
 
 
