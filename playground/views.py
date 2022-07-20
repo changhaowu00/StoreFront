@@ -5,5 +5,8 @@ from store.models import Product
 from django.db.models import Q,F
 
 def say_hello(request):
-    query_set = Product.objects.order_by('unit_price','-title').reverse()
-    return render(request,'hello.html',{'name':'Changhao','products':list(query_set)})
+    product = Product.objects.order_by('unit_price')[0]
+    product = Product.objects.lastest('unitprice')
+    product = Product.objects.earliest('unitprice')
+
+    return render(request,'hello.html',{'name':'Changhao','products':product})
