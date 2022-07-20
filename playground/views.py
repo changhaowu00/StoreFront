@@ -21,5 +21,6 @@ def say_hello(request):
     collection.featured_product = None
     collection.save()
 
+    Collection.objects.update(featured_product = None)
 
     return render(request,'hello.html',{'name':'Changhao','tags': list(qs)})
