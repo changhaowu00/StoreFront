@@ -18,9 +18,11 @@ from tags.models import TaggedItem
 
 def say_hello(request):
     collection = Collection.objects.get(pk=11)
-    collection.featured_product = None
-    collection.save()
+    collection.delete()
+
+    #or
+    Collection.objects.filter(id=11).delete()
 
     Collection.objects.update(featured_product = None)
 
-    return render(request,'hello.html',{'name':'Changhao','tags': list(qs)})
+    return render(request,'hello.html',{'name':'Changhao','tags': list()})
