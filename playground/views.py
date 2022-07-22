@@ -15,14 +15,21 @@ from django.db import models
 
 from tags.models import TaggedItem
 
+from django.db import transaction
 
+#@transaction.atomic()
 def say_hello(request):
-    collection = Collection.objects.get(pk=11)
-    collection.delete()
+    
+    with transaction.atomic:
+        order = Order () 
+        order.customer_id = 1
+        order.save()
 
-    #or
-    Collection.objects.filter(id=11).delete()
-
-    Collection.objects.update(featured_product = None)
+        item = OrderItem()
+        item.order = order
+        item.product_id = 1
+        item.quantuty = 1
+        item.unit_price = 10
+        item.save()
 
     return render(request,'hello.html',{'name':'Changhao','tags': list()})
