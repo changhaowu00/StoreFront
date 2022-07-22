@@ -17,19 +17,24 @@ from tags.models import TaggedItem
 
 from django.db import transaction
 
-#@transaction.atomic()
-def say_hello(request):
-    
-    with transaction.atomic:
-        order = Order () 
-        order.customer_id = 1
-        order.save()
+from django.db import connection
 
-        item = OrderItem()
-        item.order = order
-        item.product_id = 1
-        item.quantuty = 1
-        item.unit_price = 10
-        item.save()
+def say_hello(request):
+    qs = Product.objects.raw('SELECT * FROM store_product')
+
+    #or
+    cursor = connection.cursor()
+    cursor.execute('sql')
+    cursor.close()
+
+    #better
+    with connection.cursor() as cursor:
+        cursor.execute('sql')
+
+    #better
+    with connection.cursor() as cursor:
+        cursor.callproc('name procedure',[1,2,3])
+
+    
 
     return render(request,'hello.html',{'name':'Changhao','tags': list()})
