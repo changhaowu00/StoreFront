@@ -1,6 +1,8 @@
+from itertools import product
 from django.contrib import admin
+from django.http import HttpRequest
 from . import models
-
+from django.db.models.aggregates import Count
 
 
 
@@ -34,5 +36,17 @@ class CustomerAdmin(admin.ModelAdmin):
     ordering = ['first_name','last_name']
     list_per_page = 10
 
-admin.site.register(models.Collection)
+@admin.register(models.Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    list_display = ['title','products_count']
+
+    @admin.display(ordering= 'products_count')
+    def products_count(self,collection):
+        return collection.products_count
+
+    def get_queryset(self, request: HttpRequest):
+        return super().get_queryset(request).annotate(
+            products_count = Count('product')
+        )
+
 #admin.site.register(models.Product,ProductAdmin)
