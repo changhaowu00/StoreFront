@@ -1,8 +1,11 @@
 from itertools import product
+from urllib.parse import urlencode
 from django.contrib import admin
 from django.http import HttpRequest
 from . import models
 from django.db.models.aggregates import Count
+from django.utils.html import format_html
+from django.urls import reverse
 
 
 
@@ -42,7 +45,14 @@ class CollectionAdmin(admin.ModelAdmin):
 
     @admin.display(ordering= 'products_count')
     def products_count(self,collection):
-        return collection.products_count
+        url = (
+            reverse('admin:store_product_changelist') 
+            + '?'
+            + urlencode({
+                'collection_id':str(collection.id)
+            })
+            )
+        return format_html('<a href="{}">{}</a>',url,collection.products_count)
 
     def get_queryset(self, request: HttpRequest):
         return super().get_queryset(request).annotate(
