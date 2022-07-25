@@ -13,11 +13,11 @@ from rest_framework import status
 @api_view()
 def product_list(request):
     queryset = Product.objects.select_related('collection').all()
-    serializer = ProductSerializer(queryset,many=True)
+    serializer = ProductSerializer(queryset,many=True,context={'request': request})
     return Response(serializer.data)
 
 @api_view()
-def product_detail(request,id):
+def product_detail(request,pk):
 
     # try:
     #     product = Product.objects.get(pk=id)
@@ -26,6 +26,10 @@ def product_detail(request,id):
     # except Product.DoesNotExist:
     #     return  Response(status=status.HTTP_404_NOT_FOUND)
 
-    product = get_object_or_404(product,pk=id)
+    product = get_object_or_404(product,pk=pk)
     serializer = ProductSerializer(product)
     return Response(serializer.data)
+
+@api_view()
+def collection_detail(request,pk):
+    return Response('ok')
