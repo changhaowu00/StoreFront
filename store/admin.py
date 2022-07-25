@@ -3,12 +3,14 @@ from operator import invert
 from urllib.parse import urlencode
 from django.contrib import admin
 from django.http import HttpRequest
+
+from tags.models import TaggedItem
 from . import models
 from django.db.models.aggregates import Count
 from django.utils.html import format_html
 from django.urls import reverse
 
-
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 #Or que can register using decorator istead of pasing the class as parameter
 @admin.register(models.Order)
@@ -29,8 +31,14 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
 
 
+class TagInline(GenericTabularInline):
+    autocomplete_fields = ['tag']
+    model = TaggedItem
+
+
 @admin.register(models.Product) 
 class ProductAdmin(admin.ModelAdmin):
+    inlines = [TagInline]
     autocomplete_fields=['collection']
     prepopulated_fields={
         'slug':['title']
