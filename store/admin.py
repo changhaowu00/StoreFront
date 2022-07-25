@@ -5,6 +5,11 @@ from . import models
 
 
 #Or que can register using decorator istead of pasing the class as parameter
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id','placed_at','customer']
+
+
 @admin.register(models.Product) 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title','unit_price','inventory_status','collection_title']
