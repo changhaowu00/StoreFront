@@ -6,9 +6,15 @@ from . import models
 #Or que can register using decorator istead of pasing the class as parameter
 @admin.register(models.Product) 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title','unit_price']
+    list_display = ['title','unit_price','inventory_status']
     list_editable=['unit_price']
     list_per_page: int = 10
+
+    @admin.display(ordering='inventory')
+    def inventory_status(self,product):
+        if product.inventory < 10:
+            return 'Low'
+        return 'OK'
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
