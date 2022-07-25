@@ -1,4 +1,5 @@
 from itertools import product
+from operator import invert
 from urllib.parse import urlencode
 from django.contrib import admin
 from django.http import HttpRequest
@@ -14,6 +15,19 @@ from django.urls import reverse
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id','placed_at','customer']
 
+class InventoryFilter(admin.SimpleListFilter):
+    title = 'inventory'
+    parameter_name = 'inventory'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('<10','Low')
+        ]
+
+    def queryset(self, request, queryset) :
+        if self.value()=='<10':
+            return queryset.filter(inventory__lt=10)
+
 
 @admin.register(models.Product) 
 class ProductAdmin(admin.ModelAdmin):
@@ -22,7 +36,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page: int = 10
 
     list_select_related= ['collection']
-    
+    list_filter = ['collection','last_update']
+
     def collection_title(self,product):
         return product.collection.title
 
