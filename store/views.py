@@ -9,23 +9,14 @@ from .serializers import CollectionSerializer, ProductSerializer
 from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin,CreateModelMixin
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
-class ProductList(ListCreateAPIView):
-    queryset = Product.objects.select_related('collection').all()
-    serializer_class = ProductSerializer
-
-    # def get_queryset(self):
-    #     return Product.objects.select_related('collection').all()
-    
-    # def get_serializer_class(self):
-    #     return ProductSerializer
-    
-    def get_serializer_context(self):
-        return {'request': self.request}
-
-class ProductDetail(RetrieveUpdateDestroyAPIView):
+class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_serializer_context(self):
+        return {'request': self.request}
 
     def delete(self,request,pk):
         product = get_object_or_404(Product, pk=pk)
@@ -34,15 +25,9 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class CollectionList(ListCreateAPIView):
+class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(
         products_count=Count('products')).all()
-    serializer_class = CollectionSerializer
-
-class CollectionDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Collection.objects.annotate(
-        products_count = Count('products'))
     serializer_class = CollectionSerializer
 
     def delete(self, request, pk):
@@ -52,7 +37,6 @@ class CollectionDetail(RetrieveUpdateDestroyAPIView):
             return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def collection_detail(request, pk):
