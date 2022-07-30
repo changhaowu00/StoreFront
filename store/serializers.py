@@ -1,27 +1,25 @@
-
-import collections
-from dataclasses import fields
-from turtle import title
-from unittest.util import _MAX_LENGTH
-from rest_framework import serializers
 from decimal import Decimal
 from store.models import Product, Collection
+from rest_framework import serializers
+
 
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
-        fields = ['id','title']
+        fields = ['id', 'title', 'products_count']
+
+    products_count = serializers.IntegerField()
 
 
 class ProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Product
-        fields = ['id','title','slug','inventory','unit_price','price_with_tax','collection']
+        fields = ['id', 'title', 'description', 'slug', 'inventory', 'unit_price', 'price_with_tax', 'collection']
 
-    price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
+    price_with_tax = serializers.SerializerMethodField(
+        method_name='calculate_tax')
 
-
-
-    def calculate_tax(self,product):
+    def calculate_tax(self, product: Product):
         return product.unit_price * Decimal(1.1)
+
+   
