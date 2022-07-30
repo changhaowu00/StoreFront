@@ -1,3 +1,4 @@
+from math import prod
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
@@ -23,7 +24,7 @@ def product_list(request):
         serializer.save()
         return Response('ok')
 
-@api_view(['GET','PUT'])
+@api_view(['GET','PUT','DELETE'])
 def product_detail(request,id):
     product = get_object_or_404(Product, pk=id)
     if request.method == 'GET':
@@ -34,6 +35,11 @@ def product_detail(request,id):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+    elif request.method == 'DELETE':
+        if product.orderitems.count()>0:
+            return Response({'error':'PRoduct cannot deletes because is asociated with foreingkey'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
         
 
 @api_view()
