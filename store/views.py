@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -19,22 +20,21 @@ def product_list(request):
     elif request.method == 'POST':
         serializer =ProductSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
+        serializer.save()
         return Response('ok')
 
-@api_view()
-def product_detail(request,pk):
-
-    # try:
-    #     product = Product.objects.get(pk=id)
-    #     serializer = ProductSerializer(product)
-    #     return Response(serializer.data)
-    # except Product.DoesNotExist:
-    #     return  Response(status=status.HTTP_404_NOT_FOUND)
-
-    product = get_object_or_404(product,pk=pk)
-    serializer = ProductSerializer(product)
-    return Response(serializer.data)
+@api_view(['GET','PUT'])
+def product_detail(request,id):
+    product = get_object_or_404(Product, pk=id)
+    if request.method == 'GET':
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ProductSerializer(product,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
 
 @api_view()
 def collection_detail(request,pk):
