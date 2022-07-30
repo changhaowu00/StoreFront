@@ -5,8 +5,8 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Collection, OrderItem, Product
-from .serializers import CollectionSerializer, ProductSerializer
+from .models import Collection, OrderItem, Product, Review
+from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer
 from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin,CreateModelMixin
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
@@ -55,3 +55,8 @@ def collection_detail(request, pk):
             return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class RevieViewSet(ModelViewSet):
+    queryset = Review.objects.alias()
+    serializer_class = ReviewSerializer
+    
