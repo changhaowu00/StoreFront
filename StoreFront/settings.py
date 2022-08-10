@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'store',
     'tags',
     'likes',
-    'store_custom',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -92,8 +92,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'StoreFront', 
-        'USER': 'storefront', 
-        #'USER': 'postgres', 
+        'USER': 'postgre', 
         'PASSWORD': 'postgre',
         'HOST': '127.0.0.1', 
         'PORT': '5432',
@@ -154,3 +153,5 @@ REST_FRAMEWORK = {
 }
 #'PAGE_SIZE': 10
 #'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+
+AUTH_USER_MODEL = 'core.User'
