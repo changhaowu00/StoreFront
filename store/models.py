@@ -6,6 +6,8 @@ from uuid  import uuid4
 from django.conf import settings
 from django.contrib import admin
 
+from store import permissions
+
 class Promotion(models.Model):
     description = models.CharField(max_length=255)
     discount = models.FloatField()
@@ -72,6 +74,9 @@ class Customer(models.Model):
 
     class Meta:
         ordering = ['user__first_name', 'user__last_name']
+        permissions = [
+            ('view_history','Can view history')
+        ]
 
 
 class Order(models.Model):
