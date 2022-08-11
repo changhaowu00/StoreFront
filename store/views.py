@@ -10,6 +10,8 @@ from .filters import ProductFilter
 from .models import Cart, CartItem, Collection, Customer, Product, Review
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin, UpdateModelMixin
+from rest_framework.decorators import action
+
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -84,3 +86,15 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+    @action(detail=False, methods=['GET','PUT'])
+    def me(self, request):
+        (customer,created) = Customer.objects.get_or_create(request.user.id)
+        if request.method == 'GET':    
+            serializer = CustomerSerializer(customer)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
