@@ -1,6 +1,8 @@
+from dataclasses import field, fields
 from decimal import Decimal
 from itertools import product
-from store.models import Cart, CartItem, Customer, Product, Collection, Review
+from pyexpat import model
+from store.models import Cart, CartItem, Customer, Order, OrderItem, Product, Collection, Review
 from rest_framework import serializers
 
 
@@ -96,3 +98,16 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model =  Customer
         fields = ['id','user_id','phone','birth_date','membership']
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProdutSerializer()
+    class Meta:
+        model = OrderItem
+        fields = ['id','product','unit_price','quantity']
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+    class Meta:
+        model = Order
+        fields = ['id','customer','placed_at','payment_status']
+
