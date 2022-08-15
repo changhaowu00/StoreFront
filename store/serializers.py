@@ -4,7 +4,7 @@ from itertools import product
 from pyexpat import model
 from store.models import Cart, CartItem, Customer, Order, OrderItem, Product, Collection, Review
 from rest_framework import serializers
-
+from django.db import transaction
 
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -115,8 +115,24 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     cart_id = serializers.UUIDField()
 
     def save(self,**kwargs):
-        self.validated_data['cart_id']
-        self.context(['user_id'])
-        Customer.objects.get_or_create(user_id=self.context(['user_id']))
-        Order.objects.create()
+        with transaction.atomic():
+            cart_id = self.validated_data['cart_id']
+            (customer,created)= Customer.objects.get_or_create(user_id=self.context(['user_id']))
+            order = Order.objects.create(customer=customer)
+
+            cart_items =CartItem.objects\
+                                .select_related('product')\
+                                .filter(cart_id=cart_id)
+            order_items = [
+                OrderItem(
+                    order=order,
+                    product=item.product,
+                    unit_price=item.product.uni_price,
+                    quantity=item.quantity
+                )for item in cart_items
+            ]
+            OrderItem.objects.bulk_create(order_items)
+
+            Cart.objects.filter(pk=cart_id).delete()
+
 
