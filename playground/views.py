@@ -21,6 +21,8 @@ from django.db import transaction
 from django.db import connection
 from django.core.mail import send_mail, mail_admins, BadHeaderError
 
+from templated_mail.mail import BaseEmailMessage
+
 def say_hello(request):
     """
     qs = Product.objects.raw('SELECT * FROM store_product')
@@ -41,9 +43,11 @@ def say_hello(request):
     return render(request,'hello.html',{'name':'Changhao','tags': list()})
     """
     try:
-        message = EmailMessage('subject','message','info@moshbuy.com',['bob@moshbuy.com'])
-        message.attach_file('playground/static/images/dog.jpg')
-        message.send()
+        message = BaseEmailMessage(
+            template_name='emails/hello.html',
+            context={'name':'CHAng'}
+        )
+        message.send(['john@moshbuy.com'])
     except BadHeaderError:
         pass
     return render(request,'hello.html',{'name':'Mosh'})
