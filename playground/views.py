@@ -1,3 +1,4 @@
+from email.message import EmailMessage
 import imp
 from multiprocessing.sharedctypes import Value
 from unicodedata import name
@@ -40,7 +41,9 @@ def say_hello(request):
     return render(request,'hello.html',{'name':'Changhao','tags': list()})
     """
     try:
-        send_mail('subject','message','info@moshbuy.com',['bob@moshbuy.com'])
+        message = EmailMessage('subject','message','info@moshbuy.com',['bob@moshbuy.com'])
+        message.attach_file('playground/static/images/dog.jpg')
+        message.send()
     except BadHeaderError:
         pass
     return render(request,'hello.html',{'name':'Mosh'})
