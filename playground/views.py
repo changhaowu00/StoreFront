@@ -18,8 +18,10 @@ from tags.models import TaggedItem
 from django.db import transaction
 
 from django.db import connection
+from django.core.mail import send_mail, mail_admins, BadHeaderError
 
 def say_hello(request):
+    """
     qs = Product.objects.raw('SELECT * FROM store_product')
 
     #or
@@ -35,6 +37,10 @@ def say_hello(request):
     with connection.cursor() as cursor:
         cursor.callproc('name procedure',[1,2,3])
 
-    
-
     return render(request,'hello.html',{'name':'Changhao','tags': list()})
+    """
+    try:
+        send_mail('subject','message','info@moshbuy.com',['bob@moshbuy.com'])
+    except BadHeaderError:
+        pass
+    return render(request,'hello.html',{'name':'Mosh'})
