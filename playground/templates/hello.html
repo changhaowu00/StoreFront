@@ -1,11 +1,27 @@
 <!DOCTYPE html>
-<html>
-    <head></head>
-    <body>
-        {% if name %}
-        <h1>this works{{name}}</h1>
-        {% else %}
-        <h1>Hello</h1>
-        {% endif %}
-    <body>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Page Title</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="">
+<style>
+</style>
+<script src=""></script>
+
+<body>
+
+    {% if name %}
+    <h1>this works{{name}}</h1>
+    {% else %}
+    <h1>Hello</h1>
+    {% endif %}
+
+    <ul>
+        {% for product in products %}
+        <li>{{product.title}}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+
 </html>
